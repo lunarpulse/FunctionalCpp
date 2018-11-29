@@ -16,28 +16,12 @@
  * =============================================================================
  */
 
-#include <chrono>
+#include	<stdlib.h>
 #include <set>
 #include <iostream>
 #include <vector>
 #include <algorithm>
-
-class Timer{
-	public: Timer(): beg_(clock::now()){}
-		void reset(){beg_= clock::now();};
-		double elasped() const{
-			return std::chrono::duration_cast<second>
-				(clock::now() - beg_).count();
-		}
-	private:
-		typedef std::chrono::high_resolution_clock clock;
-		typedef std::chrono::duration<double, std::ratio<1>> second;
-		std::chrono::time_point<clock> beg_;
-
-};
-
-
-#include	<stdlib.h>
+#include "RunTimeChecker.h"
 
 /* 
  * ===  FUNCTION  ==============================================================
