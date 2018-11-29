@@ -19,6 +19,7 @@
  */
 
 #include <fplus/fplus.hpp>
+#include <type_traits>
 #include <assert.h>
 
 std::function<int(int)> add_curried(int a)
@@ -55,10 +56,10 @@ for (const auto x:xs)
 template < typename Pred> 
 auto keep_if_c (Pred predicate)
 {
-	return [predicate](const std::vector<int> &xs){
+	return [predicate](const auto& xs){
 		
-		std::vector<int>ys;
-		for (const auto x:xs)
+		std::remove_const_t<std::remove_reference_t<decltype(xs)>> ys;	
+		for (const auto& x:xs)
 		{
 			if (predicate (x))
 				ys.push_back (x);
@@ -66,6 +67,25 @@ auto keep_if_c (Pred predicate)
 		return ys;
 	};
 }
+/* 
+ * ===  FUNCTION  ==============================================================
+ *         Name:  appy_c
+ *  Description:  
+ * =============================================================================
+ */
+template<typename Pred>
+auto apply_c ( Pred predicate )
+{
+	return [predicate](const auto& xs){
+		std::remove_const_t<std::remove_reference_t<decltype(xs)>> ys;
+		
+		for ( const auto &x : xs )
+		{
+			ys.push_back(predicate(x));
+		}
+		return ys;
+	};
+}		/* -----  end of function appy_c  ----- */
 /* 
  * ===  FUNCTION  ==============================================================
  *         Name:  curried_sqr
@@ -114,10 +134,12 @@ auto add_four_curried ( int a )
 int main()
 {
 	std::vector<int> xs = {0,2,1,2,3,4};
+        std::cout<<	    fplus::show_cont(xs) <<std::endl;
         auto ys=fplus::transform(add_curried(3),xs);
 	    assert(add_curried(3)(4)==7);
 	    assert(curried_sqr(3)()==9);
 
+	    std::cout<<fplus::show(add_curried(3)(4))<<std::endl;
 	    std::vector<std::vector<int>> xss =
 		            {{0,1,2}, {3,4,5}};
 
@@ -126,8 +148,13 @@ int main()
 
 	    assert(add_four_curried(1)(2)(3)(4) == 1+2+3+4);
 
-	    fplus::transform(keep_if_c(is_even), xss);
+	    std::cout<<fplus::show_cont(fplus::transform(keep_if_c(is_even), xss))<<std::endl;
 
+	    std::cout<<fplus::show_cont(apply_c(
+				    apply_c([](int a){return a*a;})
+				    )(xss)
+			    )<<std::endl;
+	    std::cout<<fplus::show_cont(fplus::transform(fplus::fwd::transform(fplus::square<int>),xss))<<std::endl;
 	    return 1;
 }
 // Exercise 1:
