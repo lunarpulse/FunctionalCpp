@@ -21,7 +21,8 @@
 #include <iostream>
 #include <string>
 #include <memory>
-int square (int x)
+template<typename T>
+T square (T x)
 {
   return x * x;
 }
@@ -34,12 +35,12 @@ int square (int x)
  *  Description:  
  * =============================================================================
  */
-template < typename F>
+template < typename F, typename T >
 auto decorate_with_logging (const std::string &str, F f)
 {
-  return[str, f] (int x)
+  return[str, f] (T x) -> T
   {
-    int r = f(x);
+    T r = f(x);
     std::cout << str << ": " << x << " ==> " << r << std::endl;
     return r;
   };

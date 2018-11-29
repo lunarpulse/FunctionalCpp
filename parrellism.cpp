@@ -4,7 +4,7 @@
  *       Filename:  parrellism.cpp
  *
  *    Description:  pararellism of functional programming
- *
+ *            RUN:  clang++ -O3 -g -std=c++14 -lpthread parrellism.cpp -o pararell&&./pararell
  *        Version:  1.0
  *        Created:  29/11/18 14:09:19
  *       Revision:  none
