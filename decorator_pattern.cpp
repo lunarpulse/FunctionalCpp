@@ -50,7 +50,7 @@ int
 main ()
 {
   const auto
-    logging_square = decorate_with_logging ("Square", square);
+	    logging_square = decorate_with_logging<decltype(square<int>), int> ("Square", square<int>);
 
   int
     a = logging_square (4);
